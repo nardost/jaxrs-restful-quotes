@@ -1,0 +1,45 @@
+# Maven
+target/
+
+# Eclipse
+.settings/
+.metadata/
+bin/
+tmp/
+*.class
+*.project
+*.classpath
+*.prefs
+*.tmp
+*.bak
+*.swp
+*~.nib
+.factorypath
+.loadpath
+local.properties
+
+# Intellij
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/*
+*.code-workspace
+.history/
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Configuration / Credentials
+.config/
+
+# Mac
+.DS_Store
