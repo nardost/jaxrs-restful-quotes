@@ -1,4 +1,4 @@
-package edu.depaul.ntessema.jaxrs.model;
+package edu.depaul.ntessema.jaxrs.data.model;
 
 public class Quote {
 

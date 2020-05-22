@@ -1,7 +1,7 @@
 package edu.depaul.ntessema.jaxrs.resource;
 
-import edu.depaul.ntessema.jaxrs.model.Quote;
-import edu.depaul.ntessema.jaxrs.service.QuoteService;
+import edu.depaul.ntessema.jaxrs.data.model.Quote;
+import edu.depaul.ntessema.jaxrs.data.service.QuoteService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
