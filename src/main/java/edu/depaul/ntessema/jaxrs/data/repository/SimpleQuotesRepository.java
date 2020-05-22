@@ -1,12 +1,12 @@
 package edu.depaul.ntessema.jaxrs.data.repository;
 
 import edu.depaul.ntessema.jaxrs.data.model.Quote;
-import edu.depaul.ntessema.jaxrs.exception.BadRequestException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Stream;
 
@@ -92,7 +92,7 @@ public class SimpleQuotesRepository implements Repository<Quote, Integer> {
     @Override
     public Quote save(Quote quote) {
         if(quote == null) {
-            throw new BadRequestException("Null quote cannot be saved.");
+            throw new IllegalArgumentException("Null quote cannot be saved.");
         }
         /*
          * Generate the next id and assign to quote.
@@ -116,7 +116,7 @@ public class SimpleQuotesRepository implements Repository<Quote, Integer> {
     @Override
     public Quote update(Quote quote) {
         if(quote == null) {
-            throw new BadRequestException("Quote cannot be null.");
+            throw new IllegalArgumentException("Quote cannot be null.");
         }
         Integer id = quote.getId();
         if(id == null || !quotes.containsKey(id)) {
@@ -156,6 +156,16 @@ public class SimpleQuotesRepository implements Repository<Quote, Integer> {
         }
         Quote removed = quotes.remove(id);
         return removed != null;
+    }
+
+    @Override
+    public int count() {
+        return quotes.size();
+    }
+
+    @Override
+    public Set<Integer> getIds() {
+        return quotes.keySet();
     }
 
     private static final String[] QUOTES = new String[] {

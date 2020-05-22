@@ -10,18 +10,31 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.util.List;
 
 @Path("/quotes")
 public class QuotesResource {
 
     private final QuoteService quoteService = new QuoteService();
+    private final int DEFAULT_PER_PAGE = 5;
 
     @GET
     @Produces(APPLICATION_JSON)
-    public List<Quote> getAllQuotes() {
-        return quoteService.getAllQuotes();
+    public List<Quote> getAllQuotes(
+            @QueryParam("page") Integer page,
+            @QueryParam("per_page") Integer perPage) {
+
+        if(page == null) {
+            return quoteService.getAllQuotes();
+        }
+        if(perPage == null) {
+            perPage = DEFAULT_PER_PAGE;
+        }
+        return quoteService.getQuotesPerPage(page, perPage);
     }
 
     @GET

@@ -13,4 +13,6 @@ public interface Repository<T, ID> {
     T update(T quote);
     boolean delete(ID id);
     boolean existsById(ID id);
+    int count();
+    Iterable<ID> getIds();
 }

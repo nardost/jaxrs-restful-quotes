@@ -3,8 +3,9 @@ package edu.depaul.ntessema.jaxrs;
 import edu.depaul.ntessema.jaxrs.data.model.Quote;
 import edu.depaul.ntessema.jaxrs.data.repository.Repository;
 import edu.depaul.ntessema.jaxrs.data.repository.SimpleQuotesRepository;
-import edu.depaul.ntessema.jaxrs.exception.BadRequestException;
 import org.junit.jupiter.api.Test;
+
+import javax.ws.rs.BadRequestException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -18,6 +19,6 @@ public class RepoSaveTest {
 
     @Test
     public void throwsIllegalArgumentExceptionOnNullInput() {
-        assertThrows(BadRequestException.class, () -> repository.save(null));
+        assertThrows(IllegalArgumentException.class, () -> repository.save(null));
     }
 }

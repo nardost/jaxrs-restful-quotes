@@ -3,7 +3,6 @@ package edu.depaul.ntessema.jaxrs;
 import edu.depaul.ntessema.jaxrs.data.model.Quote;
 import edu.depaul.ntessema.jaxrs.data.repository.Repository;
 import edu.depaul.ntessema.jaxrs.data.repository.SimpleQuotesRepository;
-import edu.depaul.ntessema.jaxrs.exception.BadRequestException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -19,7 +18,7 @@ public class RepoUpdateTest {
 
     @Test
     public void throwsIllegalArgumentExceptionOnNullInput() {
-        assertThrows(BadRequestException.class, () -> repository.update(null));
+        assertThrows(IllegalArgumentException.class, () -> repository.update(null));
     }
 
     @Test
