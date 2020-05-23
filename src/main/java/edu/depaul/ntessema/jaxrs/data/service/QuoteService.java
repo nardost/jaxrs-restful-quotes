@@ -1,6 +1,6 @@
 package edu.depaul.ntessema.jaxrs.data.service;
 
-import edu.depaul.ntessema.jaxrs.data.model.ErrorMessage;
+import edu.depaul.ntessema.jaxrs.data.model.StatusMessage;
 import edu.depaul.ntessema.jaxrs.data.model.Quote;
 import edu.depaul.ntessema.jaxrs.data.repository.Repository;
 import edu.depaul.ntessema.jaxrs.data.repository.SimpleQuotesRepository;
@@ -57,15 +57,32 @@ public class QuoteService {
         return oldQuote;
     }
 
-    public void deleteQuote(Integer id) {
+    public Response deleteQuote(Integer id) {
         if(id == null) {
             throwBadRequestException("Id must be provided.");
         }
-        repository.delete(id);
-    }
 
-    public int getNumberOfQuotes() {
-        return repository.count();
+        /*
+         * true if quote with id was there and was deleted.
+         */
+        boolean success = repository.delete(id);
+
+        /*
+         * If quote was not found, send a not found response.
+         */
+        if(!success) {
+            throwNotFoundException("Quote with id " + id + " was not found.");
+        }
+
+        /*
+         * If quote was deleted, send a success response.
+         */
+        return Response
+                .status(Response.Status.OK)
+                .entity(new StatusMessage(
+                        Response.Status.OK.getStatusCode(),
+                        "Quote with id " + id + " successfully deleted"))
+                .build();
     }
 
     /**
@@ -111,7 +128,7 @@ public class QuoteService {
      * @param message - the message in the exception
      */
     private void throwNotFoundException(String message) {
-        ErrorMessage e = new ErrorMessage(
+        StatusMessage e = new StatusMessage(
                 Response.Status.NOT_FOUND.getStatusCode(),
                 message);
         Response response = Response
@@ -127,7 +144,7 @@ public class QuoteService {
      * @param message - the message in the exception
      */
     private void throwBadRequestException(String message) {
-        ErrorMessage e = new ErrorMessage(
+        StatusMessage e = new StatusMessage(
                 Response.Status.BAD_REQUEST.getStatusCode(),
                 message);
         Response response = Response

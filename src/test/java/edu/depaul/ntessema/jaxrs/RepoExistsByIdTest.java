@@ -18,7 +18,7 @@ public class RepoExistsByIdTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = { -5, -2, 0, 6, 10, Integer.MAX_VALUE })
+    @ValueSource(ints = { -5, -2, 0, 600, 1000, Integer.MAX_VALUE })
     public void returnsFalseWhenIdDoesNotExist(Integer id) {
         assertFalse(repository.existsById(id));
     }

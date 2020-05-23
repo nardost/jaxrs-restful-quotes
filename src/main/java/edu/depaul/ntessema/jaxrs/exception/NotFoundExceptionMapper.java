@@ -2,20 +2,21 @@ package edu.depaul.ntessema.jaxrs.exception;
 
 import edu.depaul.ntessema.jaxrs.data.model.StatusMessage;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class UnspecifiedExceptionMapper implements ExceptionMapper<Throwable> {
+public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 
     @Override
-    public Response toResponse(Throwable throwable) {
+    public Response toResponse(NotFoundException nfe) {
         StatusMessage e = new StatusMessage(
-                Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
-                "Unspecified error occurred");
+                Response.Status.NOT_FOUND.getStatusCode(),
+                "Endpoint not available.");
         return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .status(Response.Status.NOT_FOUND)
                 .header("Content-Type", "application/json")
                 .entity(e)
                 .build();
