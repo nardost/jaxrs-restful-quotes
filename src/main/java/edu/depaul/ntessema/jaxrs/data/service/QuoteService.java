@@ -52,6 +52,14 @@ public class QuoteService {
         }
         final Quote oldQuote = repository.update(quote);
         if (oldQuote == null) {
+            /*
+             * TODO
+             *  If it does not exist, what should we do? CREATE it?
+             *  (Option 1)  Generate a new id and save it.
+             *              To preserve the id scheme, we should generate
+             *              a new id instead of taking whatever is given.
+             *  (Option 2) Return a quote not found response.
+             */
             throwNotFoundException("Quote with id " + quote.getId() + " was not found.");
         }
         return oldQuote;

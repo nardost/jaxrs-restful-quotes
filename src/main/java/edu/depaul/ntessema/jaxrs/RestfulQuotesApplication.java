@@ -26,4 +26,3 @@ class GrizzlyHttpServer {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(baseURI), resourceConfig);
     }
 }
-
