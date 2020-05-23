@@ -65,7 +65,7 @@ public class QuotesResourceV1 {
 
     @PUT
     @Consumes(APPLICATION_JSON)
-    public Quote updateQuote(Quote quote) {
+    public Response updateQuote(Quote quote) {
         return quoteService.updateQuote(quote);
     }
 

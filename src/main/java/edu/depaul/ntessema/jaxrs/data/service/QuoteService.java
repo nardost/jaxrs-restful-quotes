@@ -46,23 +46,55 @@ public class QuoteService {
         return repository.save(quote);
     }
 
-    public Quote updateQuote(final Quote quote) {
+    /**
+     * Return a 204 (No CONTENT) response if existing quote was updated.
+     * Return a 201 (CREATED) response if quote was not in the list and is
+     * saved as a new entry (created) by the operation.
+     *
+     * The content location is returned as a response header.
+     *
+     * https://tools.ietf.org/html/rfc7231#section-4.3.4
+     */
+    public Response updateQuote(final Quote quote) {
         if(quote == null || quote.getQuote() == null || quote.getQuote().equals("")) {
             throwBadRequestException("Quote cannot be null or empty.");
         }
-        final Quote oldQuote = repository.update(quote);
-        if (oldQuote == null) {
+
+        /*
+         * Return the content location in response header.
+         * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT
+         */
+        final int contentLocation = repository.update(quote).getId();
+        Response.Status status;
+
+        if (quote.getId() == null || quote.getId() != contentLocation) {
             /*
-             * TODO
-             *  If it does not exist, what should we do? CREATE it?
-             *  (Option 1)  Generate a new id and save it.
-             *              To preserve the id scheme, we should generate
-             *              a new id instead of taking whatever is given.
-             *  (Option 2) Return a quote not found response.
+             * If the incoming quote was not existent, a new id will have been
+             * assigned it; in which case, the old and new ids are different.
+             * This means that a quote is CREATED in PUT parlance.
+             *
+             * https://tools.ietf.org/html/rfc7231#section-4.3.4
+             *
+             * A 201 (CREATED) response should be sent to user-agent.
              */
-            throwNotFoundException("Quote with id " + quote.getId() + " was not found.");
+            status = Response.Status.CREATED;
+        } else {
+            /*
+             * The old quote's state has been replaced by the new quote's state.
+             *
+             * A 200 or 204 response must be sent to user-agent.
+             * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT
+             *
+             */
+            status = Response.Status.NO_CONTENT;
+            /*
+             * Construct the response and return it.
+             */
         }
-        return oldQuote;
+        return Response
+                .status(status)
+                .header("Content-Location", contentLocation)
+                .build();
     }
 
     public Response deleteQuote(Integer id) {
