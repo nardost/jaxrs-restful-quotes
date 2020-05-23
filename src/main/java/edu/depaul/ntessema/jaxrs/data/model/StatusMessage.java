@@ -1,10 +1,21 @@
 package edu.depaul.ntessema.jaxrs.data.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * This entity is used to send status messages
+ * such as errors and success messages.
+ */
+@XmlRootElement
 public class StatusMessage {
 
     private Integer statusCode;
     private String statusMessage;
 
+    /*
+     * No argument constructor should be there
+     * for serialization/de-serialization.
+     */
     public StatusMessage() {
     }
 

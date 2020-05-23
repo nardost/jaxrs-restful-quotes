@@ -16,20 +16,39 @@ import java.util.stream.Stream;
  */
 public class SimpleQuotesRepository implements Repository<Quote, Integer> {
 
-    private final Map<Integer, Quote> quotes;
+    /*
+     * Quotes are stored in a map structure where the keys
+     * are the ids and the values are the quotes.
+     *
+     * Why this particular map implementation is chosen:
+     *
+     * (1) A scalable concurrent ConcurrentNavigableMap implementation.
+     * (2) Sorted according to the natural ordering of its keys.
+     * (3) Expected average log(n) time cost for the containsKey, get, put and remove operations.
+     * (4) Insertion, removal, update, and access operations safely execute concurrently by multiple threads.
+     *
+     * https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentSkipListMap.html
+     */
+    private final Map<Integer, Quote> quotes = new ConcurrentSkipListMap<>();
 
     private static SimpleQuotesRepository INSTANCE = null;
 
     private SimpleQuotesRepository() {
-        this.quotes = new ConcurrentSkipListMap<>();
+
         /*
-         * Seed the quotes silo.
+         * Create a quote object for each quote,
+         * assign generated id for the object and
+         * save it in the chosen data structure.
          */
         Stream.of(QUOTES).forEach(q -> {
             Quote quote = new Quote(q);
-            final int index = 1 + quotes.size();
-            quote.setId(index);
-            quotes.put(index, quote);
+            /*
+             * Id numbering begins from 1.
+             * id = 1, 2, 3, 4, ...
+             */
+            final int id = 1 + quotes.size();
+            quote.setId(id);
+            quotes.put(id, quote);
         });
     }
 
@@ -178,8 +197,9 @@ public class SimpleQuotesRepository implements Repository<Quote, Integer> {
             "There is no fate that cannot be surmounted by scorn.",
             "There are so many dawns that have not yet broken.",
 
-            //TODO: Delete the next quotes obtained from
-            //TODO: https://www.forbes.com/sites/kevinkruse/2013/05/28/inspirational-quotes/#1770d77d6c7a
+            //TODO:
+            // Delete before submission these next quotes obtained from
+            // https://www.forbes.com/sites/kevinkruse/2013/05/28/inspirational-quotes/#1770d77d6c7a
 
             "Life is about making an impact, not making an income. --Kevin Kruse",
             "Whatever the mind of man can conceive and believe, it can achieve. –Napoleon Hill",

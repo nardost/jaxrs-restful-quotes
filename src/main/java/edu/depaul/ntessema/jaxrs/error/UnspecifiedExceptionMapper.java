@@ -6,6 +6,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+/**
+ * This exception mapper is needed to send a generic
+ * error response when some unspecified exception is thrown.
+ */
 @Provider
 public class UnspecifiedExceptionMapper implements ExceptionMapper<Throwable> {
 

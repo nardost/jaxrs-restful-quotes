@@ -19,10 +19,14 @@ import java.util.List;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/quotes")
+/*
+ * API versioning through content negotiation (vendor media type)
+ */
 @Produces("application/vnd.api.v2+json")
 public class QuotesResourceV2 {
 
     private final QuoteService quoteService = new QuoteService();
+
     /*
      * Default to be used if page is provided but per_page is missing.
      */

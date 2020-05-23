@@ -13,13 +13,21 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 
+/*
+ * The path is part of the contract and will not
+ * change on upcoming versions.
+ */
 @Path("/quotes")
+/*
+ * API versioning through content negotiation (vendor media type).
+ */
 @Produces("application/vnd.api.v1+json")
 public class QuotesResourceV1 {
 

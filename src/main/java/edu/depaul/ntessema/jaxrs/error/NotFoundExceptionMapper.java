@@ -7,6 +7,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+/**
+ * This exception mapper is needed to send a 404 (not found)
+ * response when the user types in a non-existent path in the application.
+ */
 @Provider
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 
