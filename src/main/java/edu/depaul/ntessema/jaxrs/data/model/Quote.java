@@ -2,11 +2,11 @@ package edu.depaul.ntessema.jaxrs.data.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-/*
- * This JAXB annotation is needed
- * to produce XML content.
+/**
+ * The quote resource entity.
  *
- * It is not needed for JSON contents.
+ * This JAXB annotation is needed to produce
+ * XML content and is not needed for JSON contents.
  */
 @XmlRootElement
 public class Quote {

@@ -7,6 +7,12 @@ import org.glassfish.jersey.server.ResourceConfig;
 import java.io.IOException;
 import java.net.URI;
 
+/**
+ * @author nardos
+ *
+ * Start an HTTP server and launch the
+ * web service application at the given URI.
+ */
 public class RestfulQuotesApplication {
 
     private static final String URI = "http://localhost:8888/";

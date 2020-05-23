@@ -20,6 +20,7 @@ public class DB {
 
             //TODO: Delete or comment the next 95 quotes before submission
 
+            /**/
             "Life is about making an impact, not making an income. --Kevin Kruse",
             "Whatever the mind of man can conceive and believe, it can achieve. –Napoleon Hill",
             "Strive not to be a success, but rather to be of value. –Albert Einstein",
@@ -115,5 +116,6 @@ public class DB {
             "Change your thoughts and you change your world. –Norman Vincent Peale",
             "Either write something worth reading or do something worth writing. –Benjamin Franklin",
             "Nothing is impossible, the word itself says, “I’m possible!” –Audrey Hepburn"
+             /**/
     };
 }

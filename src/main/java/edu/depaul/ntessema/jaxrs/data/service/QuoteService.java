@@ -11,11 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuoteService {
+    /*
+     * Use the interface instead of the implementation
+     * to make future updates to the data access layer easy.
+     */
 
     private final Repository<Quote, Integer> repository = SimpleQuotesRepository.getInstance();
 
     /**
      * HTTP Verb - GET
+     *
+     * Possible responses:
+     *    200 (OK)
      *
      * If there are no paging parameters in the
      * request, return all quotes available.
@@ -34,11 +41,11 @@ public class QuoteService {
          * //repository.findAll().forEach(all::add);
          */
         final int LIMIT = 8;
-        int i = 0;
+        int count = 0;
         for(Quote q : repository.findAll()) {
             all.add(q);
-            i++;
-            if(i == LIMIT) {
+            count++;
+            if(count == LIMIT) {
                 break;
             }
         }
@@ -47,6 +54,14 @@ public class QuoteService {
 
     /**
      * HTTP Verb - GET
+     *
+     * Possible responses:
+     *     200 (OK)
+     *     400 (BAD REQUEST) - when paging params out of range.
+     *
+     * If paging parameters are in the query string,
+     * return only the quotes that fall in the page.
+     * Paging is based on quote ids sorted in ascending order.
      */
     public List<Quote> getQuotesPerPage(int page, int perPage) {
         List<Quote> quotesInPage = new ArrayList<>();
@@ -58,12 +73,25 @@ public class QuoteService {
 
     /**
      * HTTP Verb - GET
+     *
+     * Possible responses:
+     *     200 (OK)
+     *     404 (NOT FOUND)
+     *
+     * GET a specific quote by id. The user is
+     * required to supply the id as a path parameter.
+     *
      */
     public Quote getQuoteById(Integer id) {
         if(id == null) {
             throwBadRequestException("Id must be provided");
         }
         Quote quote = repository.findById(id);
+        /*
+         * If a quote with the given id does not exist,
+         * the data access layer return a null object,
+         * in which case a 404 (NOT FOUND) response must be sent.
+         */
         if(quote == null) {
             throwNotFoundException("Quote with id " + id + " was not found.");
         }
@@ -72,6 +100,10 @@ public class QuoteService {
 
     /**
      * HTTP Verb - POST
+     *
+     * Possible responses:
+     *    200 (OK)
+     *    400 (BAD REQUEST) - when an empty/null quote is POSTed
      *
      * Respond with a bad request response if
      * user POSTs a null quote or an empty quote.
@@ -96,6 +128,10 @@ public class QuoteService {
     /**
      * HTTP Verb - PUT
      *
+     * Possible responses:
+     *     204 (NO CONTENT)
+     *     201 (CREATED)
+     *
      * Return a 204 (No CONTENT) response if existing quote was updated.
      * Return a 201 (CREATED) response if quote was not in the list and is
      * saved as a new entry (created) by the operation.
@@ -110,8 +146,12 @@ public class QuoteService {
         }
 
         /*
-         * Return the content location in response header.
+         * Return the content location (id of updated quote) in response header.
+         *
          * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT
+         *
+         * The content location may be different from the id of the quote
+         * provided in the method quote as explained in the repository method update().
          */
         final int contentLocation = repository.update(quote).getId();
         Response.Status status;
@@ -124,22 +164,22 @@ public class QuoteService {
              *
              * https://tools.ietf.org/html/rfc7231#section-4.3.4
              *
-             * A 201 (CREATED) response should be sent to user-agent.
+             * A 201 (CREATED) response should be sent to user.
              */
             status = Response.Status.CREATED;
         } else {
             /*
              * The old quote's state has been replaced by the new quote's state.
              *
-             * A 200 or 204 response must be sent to user-agent.
+             * A 200 or 204 response must be sent to user.
              * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT
              *
              */
             status = Response.Status.NO_CONTENT;
-            /*
-             * Construct the response and return it.
-             */
         }
+        /*
+         * Construct the response and return it.
+         */
         return Response
                 .status(status)
                 .header("Content-Location", contentLocation)
@@ -149,8 +189,12 @@ public class QuoteService {
     /**
      * HTTP Verb - DELETE
      *
-     * Return a 200 (OK) response if quote with id exists
-     * and is deleted.
+     * Possible responses:
+     *     200 (OK)
+     *     404 (NOT FOUND)
+     *
+     * Return a 200 (OK) response if quote
+     * with given id exists and is deleted.
      *
      * https://tools.ietf.org/html/rfc7231#section-4.3.5
      * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/DELETE
@@ -175,8 +219,8 @@ public class QuoteService {
         }
 
         /*
-         * If quote was deleted, send a 200 (OK) response
-         * with content (status message).
+         * If quote was deleted, send a 200 (OK)
+         * response with content (status message).
          */
         return Response
                 .status(Response.Status.OK)
