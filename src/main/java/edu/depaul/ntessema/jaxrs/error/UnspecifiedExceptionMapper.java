@@ -18,7 +18,7 @@ public class UnspecifiedExceptionMapper implements ExceptionMapper<Throwable> {
     @Override
     public Response toResponse(Throwable throwable) {
         final String message = "Unspecified error occurred";
-        Logger logger = LoggerFactory.getLogger(ClientErrorExceptionMapper.class);
+        Logger logger = LoggerFactory.getLogger(UnspecifiedExceptionMapper.class);
         logger.error(message);
         StatusMessage e = new StatusMessage(
                 Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),

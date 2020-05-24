@@ -11,7 +11,7 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * This exception mapper is needed to send a 404 (not found)
- * response when the user types in a non-existent path in the application.
+ * response when the user types in a non-existent endpoint in the application.
  */
 @Provider
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
@@ -19,7 +19,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
     @Override
     public Response toResponse(NotFoundException nfe) {
         final String message = "Endpoint not available.";
-        Logger logger = LoggerFactory.getLogger(ClientErrorExceptionMapper.class);
+        Logger logger = LoggerFactory.getLogger(NotFoundExceptionMapper.class);
         logger.error(message);
         StatusMessage e = new StatusMessage(
                 Response.Status.NOT_FOUND.getStatusCode(),

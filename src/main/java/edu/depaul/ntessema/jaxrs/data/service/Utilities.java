@@ -18,6 +18,12 @@ import java.util.List;
 
 public class Utilities {
 
+    /*
+     * In case all resources are requested, limit the
+     * number returned to this number.
+     */
+    public static final int LIMIT = 8;
+
     /**
      * Method that returns a list of ids that fall in the given page.
      *
@@ -30,6 +36,10 @@ public class Utilities {
          * in order to get the paging right.
          */
         Collections.sort(allIds);
+        /*
+         * The quote ids that fall in page.
+         */
+        List<Integer> keysInPage = new ArrayList<>();
 
         /*
          * (1) Get total number of quotes in DB.
@@ -45,8 +55,18 @@ public class Utilities {
          * If the provided paging parameters fall
          * out of range, send a "bad request" response.
          */
-        if(page > TOTAL_NUMBER_OF_PAGES || page < 1 || perPage > TOTAL_NUMBER_OF_QUOTES) {
-            throwBadRequestException("Bad paging parameters.");
+        if(page > TOTAL_NUMBER_OF_PAGES || page < 1) {
+            throw newBadRequestException("Bad paging parameters.");
+        }
+        /*
+         * if per_page exceeds the number of quotes available,
+         * try to return all quotes but never exceed the limit set.
+         */
+        if(page == 1 && perPage > TOTAL_NUMBER_OF_QUOTES) {
+            for(int i = 0; i < allIds.size() && i < LIMIT; i++) {
+                keysInPage.add(allIds.get(i));
+            }
+            return keysInPage;
         }
 
         /*
@@ -59,7 +79,6 @@ public class Utilities {
             delta = REMAINDER - 1;
         }
         final int LAST = FIRST + delta;
-        List<Integer> keysInPage = new ArrayList<>();
         for(int i = FIRST; i <= LAST; i++) {
             keysInPage.add(allIds.get(i));
         }
@@ -71,7 +90,7 @@ public class Utilities {
      *
      * @param message - the message in the exception
      */
-    public static void throwNotFoundException(String message) {
+    public static NotFoundException newNotFoundException(String message) {
         StatusMessage e = new StatusMessage(
                 Response.Status.NOT_FOUND.getStatusCode(),
                 message);
@@ -79,7 +98,7 @@ public class Utilities {
                 .status(Response.Status.NOT_FOUND)
                 .entity(e)
                 .build();
-        throw new NotFoundException(response);
+        return new NotFoundException(response);
     }
 
     /**
@@ -87,7 +106,7 @@ public class Utilities {
      *
      * @param message - the message in the exception
      */
-    public static void throwBadRequestException(String message) {
+    public static BadRequestException newBadRequestException(String message) {
         StatusMessage e = new StatusMessage(
                 Response.Status.BAD_REQUEST.getStatusCode(),
                 message);
@@ -95,6 +114,6 @@ public class Utilities {
                 .status(Response.Status.BAD_REQUEST)
                 .entity(e)
                 .build();
-        throw new BadRequestException(response);
+        return new BadRequestException(response);
     }
 }

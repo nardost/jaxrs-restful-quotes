@@ -11,6 +11,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- The Jersey dependencies Bill of Material -->
             <dependency>
                 <groupId>org.glassfish.jersey</groupId>
                 <artifactId>jersey-bom</artifactId>
@@ -20,7 +21,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    <!-- The Jersey dependencies we need -->
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -65,6 +66,7 @@
 
     <build>
         <plugins>
+            <!-- Configure compiler plugin to use Java version 1.8 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
