@@ -4,6 +4,9 @@ import edu.depaul.ntessema.jaxrs.data.model.StatusMessage;
 import edu.depaul.ntessema.jaxrs.data.model.Quote;
 import edu.depaul.ntessema.jaxrs.data.repository.Repository;
 import edu.depaul.ntessema.jaxrs.data.repository.SimpleQuotesRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static edu.depaul.ntessema.jaxrs.data.service.Utilities.*;
 
 import javax.ws.rs.core.Response;
@@ -17,6 +20,7 @@ public class QuoteService {
      */
 
     private final Repository<Quote, Integer> repository = SimpleQuotesRepository.getInstance();
+    private final static Logger logger = LoggerFactory.getLogger(QuoteService.class);
 
     /**
      * HTTP Verb - GET
@@ -49,6 +53,7 @@ public class QuoteService {
                 break;
             }
         }
+        logger.info(String.format("All quotes requested. Result set limited to %d quotes.", LIMIT));
         return all;
     }
 
@@ -68,6 +73,7 @@ public class QuoteService {
         List<Integer> allIds = new ArrayList<>();
         repository.getIds().forEach(allIds::add);
         repository.findAllById(getKeysInPage(page, perPage, allIds)).forEach(quotesInPage::add);
+        logger.info(String.format("Page %s (%s quotes per page) requested.", page, perPage));
         return quotesInPage;
     }
 
@@ -84,7 +90,9 @@ public class QuoteService {
      */
     public Quote getQuoteById(Integer id) {
         if(id == null) {
-            throwBadRequestException("Id must be provided");
+            final String message = "Null id value in request.";
+            logger.error(message);
+            throwBadRequestException(message);
         }
         Quote quote = repository.findById(id);
         /*
@@ -93,8 +101,11 @@ public class QuoteService {
          * in which case a 404 (NOT FOUND) response must be sent.
          */
         if(quote == null) {
-            throwNotFoundException("Quote with id " + id + " was not found.");
+            final String message = String.format("Quote with id %d was not found.", id);
+            logger.error(message);
+            throwNotFoundException(message);
         }
+        logger.info(String.format("Quote with id %d requested.", id));
         return quote;
     }
 
@@ -120,9 +131,13 @@ public class QuoteService {
          * Do not allow a null or an empty quote to be saved.
          */
         if(quote == null || quote.getQuote() == null || quote.getQuote().equals("")) {
-            throwBadRequestException("Quote cannot be null or empty.");
+            final String message = "Quote cannot be null or empty.";
+            logger.error(message);
+            throwBadRequestException(message);
         }
-        return repository.save(quote);
+        Quote q = repository.save(quote);
+        logger.info(String.format("Quote with generated id %d POSTed.", q.getId()));
+        return q;
     }
 
     /**
@@ -142,7 +157,9 @@ public class QuoteService {
      */
     public Response updateQuote(final Quote quote) {
         if(quote == null || quote.getQuote() == null || quote.getQuote().equals("")) {
-            throwBadRequestException("Quote cannot be null or empty.");
+            final String message = "Quote cannot be null or empty.";
+            logger.error(message);
+            throwBadRequestException(message);
         }
 
         /*
@@ -180,6 +197,7 @@ public class QuoteService {
         /*
          * Construct the response and return it.
          */
+        logger.info(String.format("Quote with id %d updated with status code %d.", contentLocation, status.getStatusCode()));
         return Response
                 .status(status)
                 .header("Content-Location", contentLocation)
@@ -203,7 +221,9 @@ public class QuoteService {
      */
     public Response deleteQuote(Integer id) {
         if(id == null) {
-            throwBadRequestException("Id must be provided.");
+            final String message = "Id must be provided.";
+            logger.error(message);
+            throwBadRequestException(message);
         }
 
         /*
@@ -215,18 +235,22 @@ public class QuoteService {
          * If quote was not found, send a not found response.
          */
         if(!success) {
-            throwNotFoundException("Quote with id " + id + " was not found.");
+            final String message = String.format("Quote with id %d was not found.", id);
+            logger.error(message);
+            throwNotFoundException(message);
         }
 
         /*
          * If quote was deleted, send a 200 (OK)
          * response with content (status message).
          */
+        final String message = String.format("Quote with id %d successfully deleted.", id);
+        logger.info(message);
         return Response
                 .status(Response.Status.OK)
                 .entity(new StatusMessage(
                         Response.Status.OK.getStatusCode(),
-                        "Quote with id " + id + " successfully deleted"))
+                        message))
                 .build();
     }
 }
