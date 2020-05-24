@@ -92,7 +92,7 @@ public class QuoteService {
         if(id == null) {
             final String message = "Null id value in request.";
             logger.error(message);
-            throwBadRequestException(message);
+            throw newBadRequestException(message);
         }
         Quote quote = repository.findById(id);
         /*
@@ -103,7 +103,7 @@ public class QuoteService {
         if(quote == null) {
             final String message = String.format("Quote with id %d was not found.", id);
             logger.error(message);
-            throwNotFoundException(message);
+            throw newNotFoundException(message);
         }
         logger.info(String.format("Quote with id %d requested.", id));
         return quote;
@@ -133,7 +133,7 @@ public class QuoteService {
         if(quote == null || quote.getQuote() == null || quote.getQuote().equals("")) {
             final String message = "Quote cannot be null or empty.";
             logger.error(message);
-            throwBadRequestException(message);
+            throw newBadRequestException(message);
         }
         Quote q = repository.save(quote);
         logger.info(String.format("Quote with generated id %d POSTed.", q.getId()));
@@ -159,7 +159,7 @@ public class QuoteService {
         if(quote == null || quote.getQuote() == null || quote.getQuote().equals("")) {
             final String message = "Quote cannot be null or empty.";
             logger.error(message);
-            throwBadRequestException(message);
+            throw newBadRequestException(message);
         }
 
         /*
@@ -229,7 +229,7 @@ public class QuoteService {
         if(id == null) {
             final String message = "Id must be provided.";
             logger.error(message);
-            throwBadRequestException(message);
+            throw newBadRequestException(message);
         }
 
         /*
@@ -243,7 +243,7 @@ public class QuoteService {
         if(!success) {
             final String message = String.format("Quote with id %d was not found.", id);
             logger.error(message);
-            throwNotFoundException(message);
+            throw newNotFoundException(message);
         }
 
         /*

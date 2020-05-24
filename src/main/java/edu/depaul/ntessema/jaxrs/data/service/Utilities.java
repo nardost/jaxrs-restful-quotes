@@ -46,7 +46,7 @@ public class Utilities {
          * out of range, send a "bad request" response.
          */
         if(page > TOTAL_NUMBER_OF_PAGES || page < 1 || perPage > TOTAL_NUMBER_OF_QUOTES) {
-            throwBadRequestException("Bad paging parameters.");
+            throw newBadRequestException("Bad paging parameters.");
         }
 
         /*
@@ -71,7 +71,7 @@ public class Utilities {
      *
      * @param message - the message in the exception
      */
-    public static void throwNotFoundException(String message) {
+    public static NotFoundException newNotFoundException(String message) {
         StatusMessage e = new StatusMessage(
                 Response.Status.NOT_FOUND.getStatusCode(),
                 message);
@@ -79,7 +79,7 @@ public class Utilities {
                 .status(Response.Status.NOT_FOUND)
                 .entity(e)
                 .build();
-        throw new NotFoundException(response);
+        return new NotFoundException(response);
     }
 
     /**
@@ -87,7 +87,7 @@ public class Utilities {
      *
      * @param message - the message in the exception
      */
-    public static void throwBadRequestException(String message) {
+    public static BadRequestException newBadRequestException(String message) {
         StatusMessage e = new StatusMessage(
                 Response.Status.BAD_REQUEST.getStatusCode(),
                 message);
@@ -95,6 +95,6 @@ public class Utilities {
                 .status(Response.Status.BAD_REQUEST)
                 .entity(e)
                 .build();
-        throw new BadRequestException(response);
+        return new BadRequestException(response);
     }
 }

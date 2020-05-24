@@ -2,6 +2,8 @@ package edu.depaul.ntessema.jaxrs.resource;
 
 import edu.depaul.ntessema.jaxrs.data.model.Quote;
 import edu.depaul.ntessema.jaxrs.data.service.QuoteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -37,10 +39,15 @@ import java.util.List;
 public class QuotesResourceV2 {
 
     private final QuoteService quoteService = new QuoteService();
+    private static final Logger logger = LoggerFactory.getLogger(QuotesResourceV1.class);
     /*
      * Default to be used if page is provided but per_page is missing.
      */
     private final String DEFAULT_PER_PAGE = "5";
+    /*
+     * Just to show which API version is invoked.
+     */
+    private final String API_VERSION_INVOKED = "API Version 2 employed.";
 
     /*
      * GET a collection of quotes.
@@ -65,7 +72,7 @@ public class QuotesResourceV2 {
         if(page == null) {
             return quoteService.getAllQuotes();
         }
-
+        logger.info(API_VERSION_INVOKED);
         return quoteService.getQuotesPerPage(page, perPage);
     }
 
@@ -77,6 +84,7 @@ public class QuotesResourceV2 {
     @GET
     @Path("/{id}")
     public Quote getQuote(@PathParam("id") Integer id) {
+        logger.info(API_VERSION_INVOKED);
         return quoteService.getQuoteById(id);
     }
 
@@ -89,6 +97,7 @@ public class QuotesResourceV2 {
     @POST
     @Consumes(APPLICATION_JSON)
     public Quote addQuote(Quote quote) {
+        logger.info(API_VERSION_INVOKED);
         return quoteService.addQuote(quote);
     }
 
@@ -100,6 +109,7 @@ public class QuotesResourceV2 {
     @PUT
     @Consumes(APPLICATION_JSON)
     public Response updateQuote(Quote quote) {
+        logger.info(API_VERSION_INVOKED);
         return quoteService.updateQuote(quote);
     }
 
@@ -111,6 +121,7 @@ public class QuotesResourceV2 {
     @DELETE
     @Path("/{id}")
     public Response deleteQuote(@PathParam("id") Integer id) {
+        logger.info(API_VERSION_INVOKED);
         return quoteService.deleteQuote(id);
     }
 }
