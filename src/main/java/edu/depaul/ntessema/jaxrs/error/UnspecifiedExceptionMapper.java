@@ -1,6 +1,8 @@
 package edu.depaul.ntessema.jaxrs.error;
 
 import edu.depaul.ntessema.jaxrs.data.model.StatusMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -15,9 +17,12 @@ public class UnspecifiedExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Override
     public Response toResponse(Throwable throwable) {
+        final String message = "Unspecified error occurred";
+        Logger logger = LoggerFactory.getLogger(ClientErrorExceptionMapper.class);
+        logger.error(message);
         StatusMessage e = new StatusMessage(
                 Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
-                "Unspecified error occurred");
+                message);
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
                 .header("Content-Type", "application/json")
