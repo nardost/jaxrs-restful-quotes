@@ -170,10 +170,11 @@ public class QuoteService {
          * The content location may be different from the id of the quote
          * provided in the method quote as explained in the repository method update().
          */
+        final Integer originalId = quote.getId();
         final int contentLocation = repository.update(quote).getId();
         Response.Status status;
 
-        if (quote.getId() == null || quote.getId() != contentLocation) {
+        if (originalId == null || originalId != contentLocation) {
             /*
              * If the incoming quote was not existent, a new id will have been
              * assigned it; in which case, the old and new ids are different.
@@ -197,7 +198,12 @@ public class QuoteService {
         /*
          * Construct the response and return it.
          */
-        logger.info(String.format("Quote with id %d updated with status code %d.", contentLocation, status.getStatusCode()));
+        logger.info(String.format(
+                "Quote with id %d updated with status code %d (%s).",
+                contentLocation,
+                status.getStatusCode(),
+                status.toString()));
+        
         return Response
                 .status(status)
                 .header("Content-Location", contentLocation)
