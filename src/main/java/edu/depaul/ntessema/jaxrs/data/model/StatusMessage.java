@@ -1,14 +1,9 @@
 package edu.depaul.ntessema.jaxrs.data.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  * This entity is used to send status messages
  * such as errors and success messages.
- *
- * The JAXB annotation is needed only to produce XML content
  */
-@XmlRootElement
 public class StatusMessage {
 
     private Integer statusCode;
