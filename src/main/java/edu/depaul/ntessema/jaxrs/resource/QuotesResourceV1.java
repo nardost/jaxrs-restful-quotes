@@ -19,6 +19,12 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 
+/**
+ * @author nardos
+ *
+ * API Version 1
+ */
+
 /*
  * The path is part of the contract and
  * will not change on upcoming versions.

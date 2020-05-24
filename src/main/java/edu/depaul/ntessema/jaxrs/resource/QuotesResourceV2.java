@@ -19,6 +19,12 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 
+/**
+ * @author nardos
+ * 
+ * API Version 2
+ */
+
 /*
  * The path is part of the contract and
  * will not change on upcoming versions.
@@ -34,7 +40,7 @@ public class QuotesResourceV2 {
     /*
      * Default to be used if page is provided but per_page is missing.
      */
-    private final String DEFAULT_PER_PAGE = "3";
+    private final String DEFAULT_PER_PAGE = "5";
 
     /*
      * GET a collection of quotes.

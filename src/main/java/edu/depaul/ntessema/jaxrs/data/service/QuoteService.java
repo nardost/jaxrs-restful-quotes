@@ -203,7 +203,7 @@ public class QuoteService {
                 contentLocation,
                 status.getStatusCode(),
                 status.toString()));
-        
+
         return Response
                 .status(status)
                 .header("Content-Location", contentLocation)
